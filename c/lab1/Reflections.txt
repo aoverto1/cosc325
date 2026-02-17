@@ -1,0 +1,18 @@
+// 1.1: I predict that the output of x will be 20. x changed over time by changing from 2, to 5, to eventually 20.
+// The immediate values are stored in the RAM as the program ran.
+
+// 1.2: The meaning of the language changed since the value changed from 20 to 11. Imperative languages care about
+// order because the results vary based off of the values of previous lines.
+
+// 2.1: The lines where the control happens is the for loop we created. It increments through the loop, changing x,
+// until i equals the value we have for n.
+
+// 2.2: Unlike higher level coding languages like python and java where you can use a simple function that declares
+// ranges for you, you must manually program exactly how you want your computer to iterate through the loop.
+
+// 3.1: C requires me to explicitly state that the number I'm expecting is going to be a double rather than
+// automatically converting it.
+
+// 4.1: a doesn't change because C uses a pass-by-value which means the function only modified a local copy of the number.
+
+// 4.2 the pointer actually allows the function to access and modify the actual state of the memory.
