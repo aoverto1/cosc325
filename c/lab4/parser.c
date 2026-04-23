@@ -140,12 +140,12 @@ void line() {
             // this must be a new line, allocate space for it
             lines[lineindex] = malloc(1000);
             strcpy(lines[lineindex], rest_of_line);
-            printf("Stored this line: %s at line number %d, which is index %d\n", rest_of_line, lineno, lineindex);
+            //printf("Stored this line: %s at line number %d, which is index %d\n", rest_of_line, lineno, lineindex);
             lineindex++;
         } else {
             // we are overwriting an old line so just copy it over the space that was already allocated at previndex
             strcpy(lines[previndex], rest_of_line);
-            printf("Overwrote old line with this line: %s at line number %d, which is index %d\n", rest_of_line, lineno, previndex);
+            //printf("Overwrote old line with this line: %s at line number %d, which is index %d\n", rest_of_line, lineno, previndex);
         }
     } else {
         statement(); // note that statement MUST have an extra call to lex()
@@ -289,7 +289,7 @@ void statement() {
         case LIST:
             sort();
             for (int i=0; i<lineindex; i++) {
-              printf("%d: %s\n", linenos[i], lines[i]);
+              // printf("%d: %s\n", linenos[i], lines[i]);
             }
             lex(); // this IS the extra call to lex() since nothing comes after these keywords
             break;
@@ -317,7 +317,7 @@ void statement() {
                 // GOTO and GOSUB will ALTER linei
                 in_str = lines[linei];
                 stri = 0;
-                printf("Executing: %d %s\n",linenos[linei],in_str);
+                //printf("Executing: %d %s\n",linenos[linei],in_str);
                 getChar();
                 lex();
                 line();
@@ -344,8 +344,12 @@ void statement() {
 void expr_list() {
     if (nextToken == STRING) {
         // extra call to lex() to look for the comma or carriage return after the string
+        int len = strlen(lexeme);
+        if (len >= 2) {
+            lexeme[len - 1] = '\0';
+            printf("%s", lexeme + 1);
+        }
         lex();
-        printf("%s\t",lexeme);
         // do nothing else for this assignment
         // but in the next assignment you will need to print something!
     } else {
@@ -357,8 +361,10 @@ void expr_list() {
         // next assignment: printf("\t");
         if (nextToken == STRING) {
             // extra call to lex() to look for the comma or carriage return after the string
+            int len = strlen(lexeme);
+            lexeme[len - 1] = '\0';
+            printf("%s", lexeme + 1);
             lex();
-            printf("%s\t",lexeme);
             // do nothing else for this assignment
             // but in the next assignment you will need to print something
         } else {

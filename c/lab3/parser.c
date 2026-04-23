@@ -220,21 +220,10 @@ void factor() {
 
 // this always has an extra call to lex()
 void relop() {
-    if (nextToken == LT_OP) {
-        lex();
-        if (nextToken == RT_OP || nextToken == EQUALS_OP) {
-            lex();
-        }
-    }
-    else if (nextToken == RT_OP) {
-        lex();
-        if (nextToken == LT_OP || nextToken == EQUALS_OP) {
-            lex();
-        }
-    }
-    else if (nextToken == EQUALS_OP) {
-        lex();
-    }
+    if (nextToken == LT_OP || nextToken == RT_OP || nextToken == EQUALS_OP ||
+    nextToken == LE_OP || nextToken == GE_OP || nextToken == NE_OP)
+    lex();
+    
     else {
         printf("Expecting some valid REL_OP but found: %d\n", nextToken);
         exit(1);

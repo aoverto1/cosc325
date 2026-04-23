@@ -41,6 +41,11 @@ int lex();
 #define DIV_OP 24
 #define LEFT_PAREN 25
 #define RIGHT_PAREN 26
+
+#define LE_OP 27
+#define GE_OP 28
+#define NE_OP 29
+
 #define PRINT 30
 #define IF 31
 #define THEN 32
@@ -54,9 +59,13 @@ int lex();
 #define LIST 43
 #define CLEAR 44
 #define RUN 45
-#define RETURN 50
+
+#define TOK_EOF 97
+#define ERROR_TOKEN 98
+
 #define CR 99
 
+#define NEWLINE 100
 
 /*****************************************************/
 /* lookup - a function to lookup operators and parentheses
@@ -64,6 +73,26 @@ int lex();
 
 int lookup(char ch)
 {
+
+  if (ch == '<') {
+    addChar();
+    int c = getc(in_fp);
+    if (c == '=') { nextToken = LE_OP; addChar(); return nextToken; }
+    if (c == '>') { nextToken = NE_OP; addChar(); return nextToken; }
+    if (c != EOF) ungetc(c, in_fp);
+    nextToken = LT_OP;
+    return nextToken;
+  }
+
+  if (ch == '>') {
+    addChar();
+    int c = getc(in_fp);
+    if (c == '=') { nextToken = GE_OP; addChar(); return nextToken; }
+    if (c != EOF) ungetc(c, in_fp);
+    nextToken = RT_OP;
+    return nextToken;
+  }
+
   switch (ch)
   {
   case '(':
@@ -124,6 +153,9 @@ int lookup(char ch)
   default:
     addChar();
     printf("Unexpected symbol found: %c while working on the current lexeme: %s\n", nextChar, lexeme);
+
+    nextToken = ERROR_TOKEN;
+
     exit(1);
     break;
   }
@@ -156,6 +188,13 @@ void getChar()
   else
   {
     nextChar = (char)c;
+
+    if (nextChar == '\r') {
+      int c2 = getc(in_fp);
+      if (c2 != '\n' && c2 != EOF) ungetc(c2, in_fp);
+      nextChar = '\n';
+    }
+
     if (isalpha((unsigned char)nextChar))
       charClass = LETTER;
     else if (isdigit((unsigned char)nextChar))
@@ -178,6 +217,9 @@ void getNonBlank()
 
 /* examines current lexeme and returns specific token or IDENT if it's not a keyword */
 int keywordLookup() {
+
+  for (int i = 0; i < (int)strlen(lexeme); ++i) lexeme[i] = toupper((unsigned char)lexeme[i]);
+
   if (strcmp(lexeme,"PRINT")==0 || strcmp(lexeme,"PR")==0)
     return PRINT;
   else if (strcmp(lexeme,"INPUT")==0)
@@ -248,11 +290,18 @@ int lex()
   case QUOTE:
     addChar();
     getChar();
-    while (charClass != QUOTE)
+    while (charClass != QUOTE && charClass != EOF)
     {
       addChar(); 
       getChar();
     }
+
+    if (charClass == EOF){
+      nextToken = ERROR_TOKEN;
+      printf("Unterminated string %s\n", lexeme);
+      return nextToken;
+    }
+
     addChar();
     getChar();
     nextToken = STRING;

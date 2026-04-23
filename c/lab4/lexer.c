@@ -302,6 +302,6 @@ int lex()
     break;
   } /* End of switch */
   //printf("Next token is: %d, Next lexeme is %s\n",
-  //       nextToken, lexeme);
+    //nextToken, lexeme);
   return nextToken;
 } /* End of function lex */
