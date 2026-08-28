@@ -1,5 +1,7 @@
 {
     "configurations": [
+
+
         {
             "type": "java",
             "name": "Examples",
@@ -25,6 +27,7 @@
             "environment": [],
             "console": "externalTerminal"
         }
+        
     ],
     "version": "2.0.0"
 }
